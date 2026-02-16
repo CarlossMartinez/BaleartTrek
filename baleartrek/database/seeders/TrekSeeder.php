@@ -25,7 +25,7 @@ class TrekSeeder extends Seeder
         $users = User::all()->keyBy('dni')->toArray(); // Crea un array asociatiu [ 'dni' => User ]
 
         // Des d'un arxiu JSON
-        $jsonData = file_get_contents("c:\\temp\\baleartrek\\treks.json");
+        $jsonData = file_get_contents("public/data/treks.json");
         $treks = json_decode($jsonData, true);
 
         // Recórrer els 'treks' del JSON

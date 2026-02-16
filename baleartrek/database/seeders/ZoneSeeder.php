@@ -13,7 +13,7 @@ class ZoneSeeder extends Seeder
      */
     public function run(): void
     {
-        $jsonData = file_get_contents("c:\\temp\\baleartrek\\zones.json");
+        $jsonData = file_get_contents("public/data/zones.json");
         $zones = json_decode($jsonData, true);
 
         foreach ($zones["zones"]["zona"] as $zona) {

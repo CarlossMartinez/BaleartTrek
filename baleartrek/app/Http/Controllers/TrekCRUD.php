@@ -16,7 +16,7 @@ class TrekCRUD extends Controller
      */
     public function index()
     {
-        $users = Trek::paginate(10);
+        $trek = Trek::paginate(10);
         return view('trekCRUD.index', compact('trek'));
     }
 
@@ -30,8 +30,8 @@ class TrekCRUD extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        if (! $user) {
+        $trek = Trek::find($id);
+        if (! $trek) {
             return redirect()->route('trekCRUD.index')->with('error', 'Trek no trobat.');
         }
 
@@ -43,17 +43,12 @@ class TrekCRUD extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'id' => 'required',
+            'regNumber' => 'required|string|max:20',
             'name' => 'required|string|max:100',
-            'lastname' => 'required|string|max:100',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'dni' => 'nullable|string|max:20',
-            'phone' => 'nullable|string|max:20',
-            'password' => 'required|string|min:8',
-            'role_id' => 'nullable|exists:roles,id',
-            'status' => 'nullable',
-        ]);
-
-        $data['password'] = Hash::make($data['password']);
+            'municipality_id' => 'nullable|exists:municipalities,id',
+            'status' => 'required|in:y,n',
+            ]);
 
         Trek::create($data);
 
@@ -71,15 +66,11 @@ class TrekCRUD extends Controller
         }
 
         $data = $request->validate([
-            'name' => 'string|max:100',
-            'lastname' => 'string|max:100',
-            'email' => ['string','email','max:255', Rule::unique('trek')->ignore($id)
-            ],
-            'dni' => 'nullable|string|max:20',
-            'phone' => 'nullable|string|max:20',
-            'password' => 'nullable|string|min:8',
-            'role_id' => 'nullable|exists:roles,id',
-            'status' => 'required|in:y,n'
+            'id' => 'required',
+            'regNumber' => 'required|string|max:20',
+            'name' => 'required|string|max:100',
+            'municipality_id' => 'nullable|exists:municipalities,id',
+            'status' => 'required|in:y,n',
         ]);
 
         $user->update($data);
@@ -107,8 +98,11 @@ class TrekCRUD extends Controller
             return redirect()->route('trekCRUD.index')->with('error', 'Trek no trobat.');
         }
 
+        // Elimino todo lo relacionado con el trek para poder eliminar el trek
+        $trek->meetings()->delete();
+        $trek->interestingPlaces()->detach();
+        $trek->delete();
 
-
-        return redirect()->route('trekCRUD.index')->with('success', 'User eliminat.');
+        return redirect()->route('trekCRUD.index')->with('success', 'Trek eliminat correctament.');
     }
 }

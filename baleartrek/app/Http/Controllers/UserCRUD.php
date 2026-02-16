@@ -50,7 +50,7 @@ class UserCRUD extends Controller
             'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:8',
             'role_id' => 'nullable|exists:roles,id',
-            'status' => 'nullable',
+            'status' => 'required|in:y,n',
         ]);
 
         $data['password'] = Hash::make($data['password']);

@@ -19,7 +19,7 @@ class MunicipalitySeeder extends Seeder
         $islands = Island::all()->keyBy('name')->toArray(); // Crea un array asociatiu [ 'name' => Island ]
         $zones = Zone::all()->keyBy('name')->toArray(); // Crea un array asociatiu [ 'name' => Island ]
 
-        $jsonData = file_get_contents("c:\\temp\\baleartrek\\municipalities.json");
+        $jsonData = file_get_contents("public/data/municipalities.json"); 
         $municipalities = json_decode($jsonData, true);
 
         foreach ($municipalities["municipis"]["municipi"] as $municipality) {

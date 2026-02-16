@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
         ]);
 
         // Des d'un arxiu JSON
-        $jsonData = file_get_contents("c:\\temp\\baleartrek\\users.json");
+        $jsonData = file_get_contents("public/data/users.json");
         $usuaris = json_decode($jsonData, true);
 
         $gestorRole = Role::where('name', 'guia')->value('id');
