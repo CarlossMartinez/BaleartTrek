@@ -16,7 +16,7 @@ class UserCRUD extends Controller
      */
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::orderBy('updated_at', 'desc')->paginate(10);
         return view('userCRUD.index', compact('users'));
     }
 
@@ -49,8 +49,8 @@ class UserCRUD extends Controller
             'dni' => 'nullable|string|max:20',
             'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:8',
-            'role_id' => 'nullable|exists:roles,id',
-            'status' => 'required|in:y,n',
+            'role_id' => 'exists:roles,id',
+            'status' => 'in:y,n',
         ]);
 
         $data['password'] = Hash::make($data['password']);

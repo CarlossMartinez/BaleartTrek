@@ -3,26 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\InterestingPlace;
-use Illuminate\Http\Request;
+use App\Models\PlaceType;
+use Illuminate\Http\Request;  
 
 class InterestingPlaceController extends Controller
 {
     public function index()
     {
-        $interesting_places = InterestingPlace::paginate(10);
+        $interesting_places = InterestingPlace::orderBy('updated_at', 'desc')->paginate(10);
         return view('interesting_place.index', compact('interesting_places'));
     }
 
     public function create()
     {
-        return view('interesting_place.create');
+        $placeTypes = PlaceType::all();
+        return view('interesting_place.create', compact('placeTypes'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string|max:100',
-            'gps' => 'required|string|unique:interesting_place,gps',
+            'gps' => 'required|string|unique:interesting_places,gps',
+            'place_type_id' => 'required|exists:place_types,id',
         ]);
 
         InterestingPlace::create($data);
@@ -47,7 +50,8 @@ class InterestingPlaceController extends Controller
             return redirect()->route('interesting_place.index')->with('error', 'Interesting place no trobat.');
         }
 
-        return view('interesting_place.edit', compact('interesting_place'));
+        $placeTypes = PlaceType::all();
+        return view('interesting_place.edit', compact('interesting_place', 'placeTypes'));
     }
 
     public function update(Request $request, $id)

@@ -9,6 +9,11 @@ use App\Models\Trek;
 
 class Municipality extends Model
 {
+    protected $fillable = [
+    'name',
+    'island_id',
+    'zone_id',
+  ];
     public function island()
     {
         return $this->belongsTo(Island::class);

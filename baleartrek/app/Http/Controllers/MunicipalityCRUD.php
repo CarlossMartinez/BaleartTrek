@@ -5,18 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Municipality;
+use App\Models\Island;
+use App\Models\Zone;
 
 class MunicipalityCRUD extends Controller
 {
     public function index()
     {
-        $municipalities = Municipality::paginate(10);
+        $municipalities = Municipality::orderBy('updated_at', 'desc')->paginate(10);
         return view('municipalityCRUD.index', compact('municipalities'));
     }
 
     public function create()
     {
-        return view('municipalityCRUD.create');
+        $islands = Island::all();
+        $zones = Zone::all();
+        return view('municipalityCRUD.create', compact('islands', 'zones'));
     }
 
     public function store(Request $request)
@@ -50,7 +54,9 @@ class MunicipalityCRUD extends Controller
             return redirect()->route('municipalityCRUD.index')->with('error', 'Municipality no trobat.');
         }
 
-        return view('municipalityCRUD.edit', compact('municipality'));
+        $islands = Island::all();
+        $zones = Zone::all();
+        return view('municipalityCRUD.edit', compact('municipality', 'islands', 'zones'));
     }
 
     public function update(Request $request, $id)

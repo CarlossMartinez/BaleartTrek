@@ -48,6 +48,17 @@
                             <input type="text" class="mt-1 block w-full" style="@error('role_id') border-color:RED; @enderror" name="role_id" />
                             @error('role_id') <div>{{ $message }}</div> @enderror
                         </div>
+                        <div class="">
+                            <label for="status">Status (y/n): </label>
+                            <select name="status" class="mt-1 block w-full">
+                                <option value="{{'y'}}" @selected(old('status'))>
+                                    {{ 'Activo' }}
+                                </option>
+                                <option value="{{'n'}}" @selected(old('status'))>
+                                    {{ 'Inactivo' }}
+                                </option>
+                            </select>
+                        </div>
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear</button>
                     </form>
                 </div>

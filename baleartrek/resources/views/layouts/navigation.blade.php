@@ -23,11 +23,23 @@
                     </x-nav-link>
                 </div>
 
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('interesting_place.create')" :active="request()->routeIs('interesting_place.create')">
+                        {{ __('Create Interesting Place') }}
+                    </x-nav-link>
+                </div>
+
                 <!-- User  -->
 
-                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('userCRUD.index')" :active="request()->routeIs('userCRUD.*')">
                         {{ __('Users') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('userCRUD.create')" :active="request()->routeIs('user.create')">
+                        {{ __('Create User') }}
                     </x-nav-link>
                 </div>
 
@@ -39,12 +51,37 @@
                     </x-nav-link>
                 </div>
 
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('municipalityCRUD.create')" :active="request()->routeIs('municipality.create')">
+                        {{ __('Create Municipality') }}
+                    </x-nav-link>
+                </div>
                 
                 <!-- Meetings  -->
 
                  <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('meetingCRUD.index')" :active="request()->routeIs('meetingCRUD.*')">
                         {{ __('Meetings') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('meetingCRUD.create')" :active="request()->routeIs('meetingCRUD.create')">
+                        {{ __('Create Meeting') }}
+                    </x-nav-link>
+                </div>
+
+                <!-- Treks  -->
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('trekCRUD.index')" :active="request()->routeIs('trekCRUD.*')">
+                        {{ __('Treks') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('trekCRUD.create')" :active="request()->routeIs('trekCRUD.create')">
+                        {{ __('Create Trek') }}
                     </x-nav-link>
                 </div>
 

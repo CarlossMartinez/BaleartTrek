@@ -13,6 +13,7 @@ class Trek extends Model
         'regNumber',
         'name',
         'municipality_id',
+        'status',
     ];
 
     public function meetings()

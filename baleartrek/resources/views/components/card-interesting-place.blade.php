@@ -1,4 +1,4 @@
-<div class="block rounded-lg bg-white shadow-secondary-1 border border-gray-200 gap-4">
+<div class="block rounded-lg bg-white shadow-secondary-1">
     <div class="p-6 text-surface">
         <!-- Le he cambiado el nombre porque tenia que limpiar datos por nomenclaturas -->
         @php $ip = $interestingPlace ?? $interesting_place ?? null; @endphp

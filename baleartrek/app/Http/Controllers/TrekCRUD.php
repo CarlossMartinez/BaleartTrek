@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Console\Migrations\StatusCommand;
 use Illuminate\Http\Request;
 use App\Models\Trek;
+use App\Models\Municipality;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -16,13 +17,14 @@ class TrekCRUD extends Controller
      */
     public function index()
     {
-        $trek = Trek::paginate(10);
+        $trek = Trek::orderBy('updated_at', 'desc')->paginate(10);
         return view('trekCRUD.index', compact('trek'));
     }
 
     public function create()
     {
-        return view('trekCRUD.create');
+        $municipalities = Municipality::all('id', 'name');
+        return view('trekCRUD.create', compact('municipalities'));
     }
 
     /**
@@ -43,8 +45,7 @@ class TrekCRUD extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'id' => 'required',
-            'regNumber' => 'required|string|max:20',
+            'regNumber' => ['required', 'string', 'max:20', Rule::unique('treks', 'regNumber')->ignore($request->regNumber, 'regNumber')],
             'name' => 'required|string|max:100',
             'municipality_id' => 'nullable|exists:municipalities,id',
             'status' => 'required|in:y,n',
@@ -66,11 +67,10 @@ class TrekCRUD extends Controller
         }
 
         $data = $request->validate([
-            'id' => 'required',
-            'regNumber' => 'required|string|max:20',
+            'regNumber' => ['required', 'string', 'max:20', Rule::unique('treks', 'regNumber')->ignore($request->regNumber, 'regNumber')],
             'name' => 'required|string|max:100',
-            'municipality_id' => 'nullable|exists:municipalities,id',
-            'status' => 'required|in:y,n',
+            'municipality_id' => 'exists:municipalities,id',
+            'status' => 'in:y,n',
         ]);
 
         $user->update($data);
@@ -80,12 +80,15 @@ class TrekCRUD extends Controller
 
     public function edit($id)
     {
+        $municipalities = Municipality::all('id', 'name');
+        $treks = Trek::all();
+        
         $trek = Trek::find($id);
         if (! $trek) {
             return redirect()->route('trekCRUD.index')->with('error', 'Trek no trobat.');
         }
 
-        return view('trekCRUD.edit', compact('trek'));
+        return view('trekCRUD.edit', compact('trek', 'treks', 'municipalities'));
     }
 
     /**

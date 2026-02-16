@@ -7,6 +7,7 @@ use App\Http\Controllers\MunicipalityCRUD;
 
 use App\Http\Controllers\MeetingCRUD;
 use App\Http\Controllers\UserCRUD;
+use App\Http\Controllers\TrekCRUD;
 
 use App\Http\Middleware\CheckRoleAdmin;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('meetingCRUD', meetingCRUD::class)->middleware(middleware: CheckRoleAdmin::class);
     Route::resource( 'userCRUD', userCRUD::class)->middleware(middleware: CheckRoleAdmin::class);
-    Route::resource( 'municipalityCRUD', municipalityCRUD::class)->middleware(middleware: CheckRoleAdmin::class);
+    Route::resource( 'municipalityCRUD', controller: municipalityCRUD::class)->middleware(middleware: CheckRoleAdmin::class);
+    Route::resource( 'trekCRUD', controller: TrekCRUD::class)->middleware(middleware: CheckRoleAdmin::class);
     Route::resource('interesting_place', InterestingPlaceController::class)->middleware(middleware: CheckRoleAdmin::class);
 });
 

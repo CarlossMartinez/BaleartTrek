@@ -29,8 +29,10 @@
                             <label for="place_type_id">Tipus</label>
                             <select name="place_type_id" class="mt-1 block w-full">
                                 <option value="">-- Selecciona un tipus --</option>
-                                @foreach ($placeTypes as $title => $id)
-                                    <option value="{{ $id }}">{{ $title }}</option>
+                                @foreach($placeTypes as $zone)
+                                    <option value="{{ $zone->id }}" @selected(old('place_type_id') == $zone->id)>
+                                        {{ $zone->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('place_type_id') <div>{{ $message }}</div> @enderror

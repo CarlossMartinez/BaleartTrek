@@ -49,7 +49,14 @@
                         </div>
                         <div class="mb-3">
                             <label for="status">Status (y, n): </label>
-                            <input type="text" class="mt-1 block w-full" style="@error('status') border-color:RED; @enderror" name="status" value="{{ $user->status }}"/>
+                            <select name="status" class="mt-1 block w-full">
+                                <option value="{{'y'}}" @selected(old('status'))>
+                                    {{ 'Activo' }}
+                                </option>
+                                <option value="{{'n'}}" @selected(old('status'))>
+                                    {{ 'Inactivo' }}
+                                </option>
+                            </select>
                             @error('status') <div>{{ $message }}</div> @enderror
                         </div>
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Actualitzar</button>
