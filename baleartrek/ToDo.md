@@ -1,1 +1,0 @@
-# Fixear los Meetings // Function de DELETE
