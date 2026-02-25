@@ -1,52 +1,36 @@
-// ============================================================
-// src/pages/Treks.jsx
-//
-// Página con el listado de todos los treks disponibles.
-// Tiene filtros por:
-//   - island_id (isla)
-//   - zone_id (zona)
-//   - orderBy (popular = ordenar por más inscritos)
-// Y paginación.
-// ============================================================
-
 import { useState, useEffect } from "react";
 import { treksService } from "../services/services";
 import TarjetaTrek from "../components/ui/TarjetaTrek";
 import Paginacion from "../components/ui/Paginacion";
 
 export default function Treks() {
-  // Lista de treks que nos devuelve el backend
+  // los treks que saco del back
   const [treks, setTreks] = useState([]);
-
-  // Listas para los dropdowns de filtros
+  // las opciones para filtrar (islas y zonas)
   const [islas, setIslas] = useState([]);
   const [zonas, setZonas] = useState([]);
-
-  // Estado de los filtros seleccionados
+  // filtros  seleccionados
   const [filtros, setFiltros] = useState({
-    island_id: "",  // ID de la isla seleccionada (vacío = todas)
-    zone_id: "",    // ID de la zona seleccionada (vacío = todas)
-    orderBy: "",    // "popular" para ordenar por inscritos
+    island_id: "",  // vacio = todas las islas
+    zone_id: "",    // vacio = todas las zonas
+    orderBy: "",    // "popular" = ordenar por inscritos
   });
 
   // Página actual de la paginación
   const [paginaActual, setPaginaActual] = useState(1);
 
-  // Total de páginas (lo devuelve Laravel en la respuesta)
+  // Total de páginas me lo da laravel
   const [totalPaginas, setTotalPaginas] = useState(1);
-
-  // Estados de carga y error
+  // para el spinner de carga
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
-  // -------------------------------------------------------
-  // Cargar las opciones de los filtros (islas y zonas)
-  // Solo se hace una vez al montar el componente
-  // -------------------------------------------------------
+  // cargo las islas y zonas para los desplegables
   useEffect(() => {
     const cargarFiltros = async () => {
       try {
-        // Hacemos las dos peticiones al mismo tiempo con Promise.all
+        // hago las dos peticiones a la vez, para esto el promise.all 
+        // si no se cumplen ambas no no hago nada
         const [resIslas, resZonas] = await Promise.all([
           treksService.getIslands(),
           treksService.getZones(),
@@ -61,26 +45,21 @@ export default function Treks() {
     cargarFiltros();
   }, []);
 
-  // -------------------------------------------------------
-  // Cargar los treks cuando cambian los filtros o la página
-  // -------------------------------------------------------
+  // cargo los treks cuando cambio filtros o página
   useEffect(() => {
     const cargarTreks = async () => {
       setCargando(true);
       setError(null);
 
       try {
-        // Construimos los parámetros de la petición
-        // Solo enviamos los filtros que tienen valor (no los vacíos)
+        // filtramos
         const params = { page: paginaActual };
         if (filtros.island_id) params.island_id = filtros.island_id;
-        if (filtros.zone_id) params.zone_id = filtros.zone_id;
+        if (filtros.zone_id) params.zone_id = filtros.zone_id;  
         if (filtros.orderBy) params.orderBy = filtros.orderBy;
 
         const res = await treksService.getAll(params);
-
-        // Laravel devuelve los datos paginados así:
-        // { data: [...treks], current_page: 1, last_page: 5, total: 50 }
+        // el back devuelve data y los objetos, por eso es data.data
         setTreks(res.data.data ?? res.data);
         setTotalPaginas(res.data.last_page ?? 1);
       } catch (err) {
@@ -92,30 +71,24 @@ export default function Treks() {
     };
 
     cargarTreks();
-  }, [filtros, paginaActual]); // Se ejecuta cuando cambian los filtros o la página
+  }, [filtros, paginaActual]); // cuando cambie algo cargo todo
 
-  // -------------------------------------------------------
-  // Función para manejar el cambio de filtros
-  // Cuando se cambia un filtro, volvemos a la página 1
-  // -------------------------------------------------------
+  // para cambiar los filtros
   const handleFiltro = (nombre, valor) => {
     setFiltros((anterior) => ({ ...anterior, [nombre]: valor }));
-    setPaginaActual(1); // Volvemos al inicio al filtrar
+    setPaginaActual(1); // vuelvo a pagina 1 siempre
   };
 
-  // -------------------------------------------------------
-  // RENDER
-  // -------------------------------------------------------
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
 
-      {/* Título de la página */}
+      {/* titulo */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Treks</h1>
         <p className="text-stone-400">Descubre todas nuestras rutas disponibles</p>
       </div>
 
-      {/* FILTROS */}
+      {/* flitros */}
       <div className="bg-stone-800 rounded-xl p-4 mb-8 flex flex-wrap gap-4 items-end border border-stone-700">
 
         {/* Filtro por isla */}
@@ -152,7 +125,7 @@ export default function Treks() {
           </select>
         </div>
 
-        {/* Filtro de ordenación */}
+        {/* Filtro de orden */}
         <div className="flex flex-col gap-1 min-w-[160px]">
           <label className="text-stone-400 text-sm font-medium">Ordenar por</label>
           <select
@@ -161,12 +134,12 @@ export default function Treks() {
             className="bg-stone-900 text-white border border-stone-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
           >
             <option value="">Por defecto</option>
-            {/* "popular" → el backend ordena por número de inscritos */}
+            {/* ordena por inscritos */}
             <option value="popular">Más populares</option>
           </select>
         </div>
 
-        {/* Botón para limpiar todos los filtros */}
+        {/* borra todos los filtros */}
         {(filtros.island_id || filtros.zone_id || filtros.orderBy) && (
           <button
             onClick={() => {
@@ -180,23 +153,20 @@ export default function Treks() {
         )}
       </div>
 
-      {/* ================================================== */}
-      {/* LISTADO DE TREKS */}
-      {/* ================================================== */}
-
-      {/* Estado de carga */}
+      {/* la lista de treks */}
+      {/* cargando spinner */}
       {cargando && (
         <div className="flex justify-center py-20">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-emerald-500"></div>
         </div>
       )}
 
-      {/* Estado de error */}
+      {/* si hay error */}
       {error && !cargando && (
         <div className="text-center py-20">
           <p className="text-red-400 mb-4">{error}</p>
           <button
-            onClick={() => setFiltros({ ...filtros })} // Forzamos recarga
+            onClick={() => setFiltros({ ...filtros })} // recargo 
             className="bg-emerald-600 text-white px-4 py-2 rounded-lg"
           >
             Reintentar
@@ -204,14 +174,14 @@ export default function Treks() {
         </div>
       )}
 
-      {/* Sin resultados */}
+      {/* Si no devuelve nada */}
       {!cargando && !error && treks.length === 0 && (
         <div className="text-center py-20">
           <p className="text-stone-400 text-lg">No se encontraron treks con esos filtros.</p>
         </div>
       )}
 
-      {/* Grid de tarjetas de treks */}
+      {/* Grid de treks */}
       {!cargando && !error && treks.length > 0 && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

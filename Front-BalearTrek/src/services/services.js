@@ -1,26 +1,5 @@
-// ============================================================
-// src/services/services.js
-//
-// Aquí están todas las funciones que hacen peticiones a la API.
-// Las organizamos por "recurso" (treks, meetings, usuarios...).
-// Así cuando necesitamos hacer un fetch, sabemos exactamente
-// dónde buscarlo.
-//
-// CAMPOS DE LA BASE DE DATOS (para recordar):
-// - users:          id, name, lastname, dni, email, phone, password, role_id
-// - treks:          id, regNumber, name, status, municipality_id
-// - meetings:       id, user_id, trek_id, day, time, totalScore, countScore, appDateIni, appDateEnd
-// - meeting_user:   id, meeting_id, user_id  (tabla pivot de inscripciones)
-// - interesting_places: id, name, gps, place_type_id
-// - comments:       id, comment, score, status, user_id, meeting_id
-// - images:         id, url, comment_id
-// - municipalities: id, name, island_id, zone_id
-// - islands:        id, name
-// - zones:          id, name
-// ============================================================
-
 import api from "./api";
-
+const API_URL = "http://baleartrek.test/api";
 // ============================================================
 // AUTENTICACIÓN
 // ============================================================
@@ -50,9 +29,6 @@ export const authService = {
   updatePassword: (data) => api.put("/user/password", data),
 };
 
-// ============================================================
-// TREKS
-// ============================================================
 export const treksService = {
   // GET /api/treks
   // Obtiene todos los treks activos (status = 'y').
@@ -77,9 +53,6 @@ export const treksService = {
   getZones: () => api.get("/zones"),
 };
 
-// ============================================================
-// MEETINGS (salidas/quedadas de cada trek)
-// ============================================================
 export const meetingsService = {
   // GET /api/treks/:trekId/meetings
   // Obtiene todos los meetings de un trek concreto
